@@ -135,15 +135,15 @@ func (e *Extractor) Tar(ctx context.Context, body io.Reader, location string, re
 			continue
 		}
 
-		info := header.FileInfo()
+		//info := header.FileInfo()
 
 		switch header.Typeflag {
 		case tar.TypeDir:
-			if err := e.FS.MkdirAll(path, info.Mode()); err != nil {
+			if err := e.FS.MkdirAll(path, os.ModePerm); err != nil {
 				return errors.Annotatef(err, "Create directory %s", path)
 			}
 		case tar.TypeReg, tar.TypeRegA:
-			if err := e.copy(ctx, path, info.Mode(), tr); err != nil {
+			if err := e.copy(ctx, path, os.ModePerm, tr); err != nil {
 				return errors.Annotatef(err, "Create file %s", path)
 			}
 		case tar.TypeLink:
